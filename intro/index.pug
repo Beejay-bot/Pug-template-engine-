@@ -1,0 +1,104 @@
+//- A mixin example. Think of it like a seperate react component or a function meant to rendering something 
+//- dynamically.
+mixin comment (commentData)
+    .comment 
+        if commentData.postedByAdmin 
+            em(Posted by Admin)
+        .date= commentData.date
+        .author= commentData.author
+        .text= commentData.text
+
+
+
+doctype html
+//- basics 
+html
+    head
+        link(rel='stylesheet' href="style.css")
+        style.
+            p {
+                color: pink;
+                text-decoration: underline;
+            }
+            .comment {
+                font-family: san-serif;
+                line-height: 1.5;
+                padding: 10px;
+                border: 1px solid #555;
+                width: 250px;
+            }
+
+            .date {
+                font-size: 85%;
+                text-align: right;
+            }
+            .author { font-size: 110%; font-weight: bold; }
+            .text { font-size: 100%; }
+    body 
+
+        //-  include Statements
+        include includes/nav
+
+        //- ids && classes
+        h1#pageTitle Page title goes here!
+        p.big-para. 
+            Here some text for my big 
+            paragraph blah blah 
+        p.big-para(style=pStyles). 
+            Here some text for my big 
+            paragraph blah blah 
+        .display-box
+        #myOnlydiv
+
+        //- Attributes
+        input(type="password" name="inPwd" data-js=`${ 5 > 2 ? 'ok' : "Not ok!" }`)
+        
+        - const myClasses = ['class1','class2','class3']
+        div.my-div(class=myClasses)
+
+        - const myStyles = {"color":"red", "background-color":"blue"}
+        div(style=myStyles)
+
+        - const myAttributes = {"src":"myPhoto.png", "alt": "This is my photo"}
+        img&attributes(myAttributes)
+
+        //- Loops
+        h1 For/Each loop
+        - const names = ['Kike', 'Mike', 'Ade', 'Tope', 'Bola']
+        - const grades = {"web dev": 85, 'software design': 76}
+        each n, i in grades
+            p= `${n} - ${i}`
+        else 
+            strong No values are here!
+
+
+        //- Conditional statements
+        - let user = { name: 'Mike',  loggedIn: false, lastLogin: 11 }
+        if user.loggedIn
+            p
+                | Welcome back,
+                strong #{ user.name }
+        else if user.lastLogin < 10
+            p Your last login  #{ user.lastLogin } minutes ago
+            p 
+                a(href='/login') Log In Again
+        else 
+            a(href='/login') Log in
+
+        //- Case Statements
+        - const orderstatus = 'completed'
+
+        case  orderstatus 
+            when 'Pending'
+                p Your order has been placed and will be sent shortly
+            when 'In_Transit'
+                p Your order is on the move - you should recieve it soon!
+            when 'completed'
+                p Your order has been completed.
+            default 
+                Sorry We aren't sure what happend with your order .....
+
+        // Mixins
+        - const c = { postedByAdmin:true, date:"22-03-2022", author:"beejaybot", text:"Nice one, continue.??" }
+        //-  to call a mixin include the "+" before calling it.
+        +comment(c)
